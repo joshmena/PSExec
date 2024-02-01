@@ -1,0 +1,15 @@
+$VerbosePreference = 'Continue'
+$source = 'C:\PSTools\Procdump\'
+$cred = Get-Credential trad\svc_mcafee
+foreach ($server in (Get-Content C:\Powershell\PSEXEC\computers.txt)) {
+Write-Verbose "Working on $server"
+if (test-connection $server -quiet)
+{ Write-Verbose "-- Mapping drive"
+New-PSDrive -name $server -PsProvider FileSystem -root "\\$server\C$\temp" -credential $cred
+Write-Verbose "-- Starting copy"
+Copy-Item $source\* -Destination "$($server):"
+Write-Verbose "-- Copy complete for $server; removing drive"
+Remove-PSDrive -Name $server
+} else { Write-Verbose "Couldn't verify connection to $server"
+}
+}

@@ -1,0 +1,9 @@
+$computers = gc "C:\Powershell\PSEXEC\computers.txt"
+
+foreach ($computer in $computers) {
+    if (test-Connection -Cn $computer -quiet) {
+        & C:\pstools\psexec.exe \\$computer /accepteula -u "Domain\User" -p "Password"
+    } else {
+        "$computer is not online"
+    }
+}
